@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITextFieldDelegate,
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var photoImageView: UIImageView!
+    @IBOutlet weak var ratingControl: RatingControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,9 +57,6 @@ class ViewController: UIViewController, UITextFieldDelegate,
         // 通知视图代理
         imagePickerController.delegate = self
         present(imagePickerController,animated: true,completion: nil)
-    }
-    @IBAction func setDefaultLabel(_ sender: UIButton) {
-        nameLabel.text = "默认项目名称"
     }
     
 }
