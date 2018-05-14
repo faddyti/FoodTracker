@@ -19,6 +19,9 @@ class MealTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        // 加载快餐列表
+        loadSampleMeals()
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,24 +32,26 @@ class MealTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return meals.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        //单元格重用，离队标记一下
+        let cellIdentifier = "MealTableViewCell"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MealTableViewCell else{
+            fatalError("离队单元格不是MealTalbeViewCell实例")
+        }
+        //获取对应数据源的快餐
+        let meal = meals[indexPath.row]
+        cell.nameLable.text = meal.name
+        cell.photoImageView.image = meal.photo
+        cell.ratingControl.rating = meal.rating
         return cell
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.
@@ -103,7 +108,7 @@ class MealTableViewController: UITableViewController {
         guard let meal2 = Meal.init(name: "土豆鸡块", photo: photo2, rating: 5) else {
             fatalError("无法创建实例:meal2")
         }
-        guard let meal3 = Meal.init(name: "肉丸披萨", photo: photo3	, rating: 3) else {
+        guard let meal3 = Meal.init(name: "意大利肉丸面", photo: photo3	, rating: 3) else {
             fatalError("无法创建实例:meal3")
         }
         meals += [meal1,meal2,meal3]
