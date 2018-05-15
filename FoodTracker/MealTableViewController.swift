@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class MealTableViewController: UITableViewController {
     //MARK:属性
@@ -88,15 +89,41 @@ class MealTableViewController: UITableViewController {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // MARK: 跳转
+    // 跳转之前做点准备
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        super.prepare(for: segue, sender: sender)
+        switch segue.identifier ?? ""  {
+        case "AddItem":
+            os_log("add new item", log:OSLog.default, type:.debug)
+        case "ShowDetail":
+            guard let mealDetailViewController = segue.destination as? MealViewController else{
+                fatalError("unexpected destination: \(segue.destination)")
+            }
+            guard let selectedMealCell = sender as? MealTableViewCell else {
+                fatalError("unexpected sender: \(sender)")
+            }
+            guard let indexPath = tableView.indexPath(for: selectedMealCell) else {
+                fatalError("the selected cell is not being displayed by the table.")
+            }
+            let selectMeal = meals[indexPath.row]
+            mealDetailViewController.meal = selectMeal
+        default:
+            fatalError("unexpeted segue identifier: \(segue.identifier)")
+        }
+        
     }
-    */
+
+    //MARK:动作
+    @IBAction func unwindToMealList(sender:UIStoryboardSegue){
+        if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
+            //添加新项目到列表
+            let newIndexPath = IndexPath(row: meals.count, section: 0)
+            meals.append(meal)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+            
+        }
+    }
     //MARK:私有方法
     private func loadSampleMeals(){
         let photo1 = UIImage(named: "Meal1")

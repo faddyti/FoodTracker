@@ -7,20 +7,26 @@
 //
 
 import UIKit
+import os.log
 
 class MealViewController: UIViewController, UITextFieldDelegate,
     UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     //MARK: 属性
     @IBOutlet weak var nameTextField: UITextField!
-    
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var ratingControl: RatingControl!
-    
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    /*
+     meal, 由MealTableViewController的方法prepare(for:sender:)传值或新建项目时产生
+     */
+    var meal: Meal?
     override func viewDidLoad() {
         super.viewDidLoad()
         // 通过代理回调处理文本框
         nameTextField.delegate = self
+        // 没有有效项目名称，禁用保存按钮
+        updateSaveButtonState()
     }
     
     //MARK: 文本框代理回調
@@ -30,6 +36,12 @@ class MealViewController: UIViewController, UITextFieldDelegate,
         return true
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
+        updateSaveButtonState()
+        navigationItem.title = textField.text
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        // 输入状态，保存按钮不能使用
+        saveButton.isEnabled = false
     }
     
     //MARK: 图片代理回调
@@ -45,6 +57,24 @@ class MealViewController: UIViewController, UITextFieldDelegate,
         photoImageView.image = selectedImage
         dismiss(animated: true, completion: nil)
     }
+    //MARK: 跳转
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    // 在显示目标视图前配置视图控制器
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        // 当“保存”按钮按下，配置目标视图控制器
+        guard let button = sender as?UIBarButtonItem, button === saveButton else {
+            os_log("The save button was not pressed, cancelling", log:OSLog.default,type:.debug)
+            return
+        }
+        let name = nameTextField.text ?? ""
+        let photo = photoImageView.image
+        let rating = ratingControl.rating
+        // 设置跳转前变量meal，为跳转到目标视图做准备
+        meal = Meal(name: name, photo: photo, rating: rating)
+    }
     //MARK: 动作
     @IBAction func selectImageFromPhotoLibrary(_ sender: UITapGestureRecognizer) {
         // 隐藏键盘
@@ -57,6 +87,11 @@ class MealViewController: UIViewController, UITextFieldDelegate,
         imagePickerController.delegate = self
         present(imagePickerController,animated: true,completion: nil)
     }
-    
+    //MARK: 私有方法
+    private func updateSaveButtonState() {
+        // 如果输入为空，保存按钮禁用
+        let text = nameTextField.text ?? ""
+        saveButton.isEnabled = !text.isEmpty
+    }
 }
 
