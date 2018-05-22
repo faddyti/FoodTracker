@@ -94,9 +94,9 @@ class MealTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         switch segue.identifier ?? ""  {
-        case "AddItem":
+        case "addItem":
             os_log("add new item", log:OSLog.default, type:.debug)
-        case "ShowDetail":
+        case "showDetail":
             guard let mealDetailViewController = segue.destination as? MealViewController else{
                 fatalError("unexpected destination: \(segue.destination)")
             }
@@ -117,11 +117,17 @@ class MealTableViewController: UITableViewController {
     //MARK:动作
     @IBAction func unwindToMealList(sender:UIStoryboardSegue){
         if let sourceViewController = sender.source as? MealViewController, let meal = sourceViewController.meal {
-            //添加新项目到列表
-            let newIndexPath = IndexPath(row: meals.count, section: 0)
-            meals.append(meal)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-            
+            //更新项目
+            if let selectIndexPath = tableView.indexPathForSelectedRow{
+                meals[selectIndexPath.row] = meal
+                tableView.reloadRows(at: [selectIndexPath], with:.none)
+            }
+            else{
+                //添加新项目到列表
+                let newIndexPath = IndexPath(row: meals.count, section: 0)
+                meals.append(meal)
+                tableView.insertRows(at: [newIndexPath], with: .automatic)
+            }
         }
     }
     //MARK:私有方法
@@ -135,7 +141,7 @@ class MealTableViewController: UITableViewController {
         guard let meal2 = Meal.init(name: "土豆鸡块", photo: photo2, rating: 5) else {
             fatalError("无法创建实例:meal2")
         }
-        guard let meal3 = Meal.init(name: "意大利肉丸面", photo: photo3	, rating: 3) else {
+        guard let meal3 = Meal.init(name: "意大利肉丸面", photo: photo3, rating: 3) else {
             fatalError("无法创建实例:meal3")
         }
         meals += [meal1,meal2,meal3]

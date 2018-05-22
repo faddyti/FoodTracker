@@ -78,8 +78,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nTs-EQ-Sqp">
-                                <rect key="frame" x="0.0" y="84" width="375" height="471"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nTs-EQ-Sqp">
+                                <rect key="frame" x="0.0" y="84" width="375" height="465"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="输入内容" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xbP-lv-mkD">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
@@ -97,8 +97,8 @@
                                             <outletCollection property="gestureRecognizers" destination="E3Q-32-vVQ" appends="YES" id="eXk-fa-CDL"/>
                                         </connections>
                                     </imageView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="j1I-Yn-gCF" customClass="RatingControl" customModule="FoodTracker" customModuleProvider="target">
-                                        <rect key="frame" x="61.5" y="421" width="252" height="50"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="j1I-Yn-gCF" customClass="RatingControl" customModule="FoodTracker" customModuleProvider="target">
+                                        <rect key="frame" x="61.5" y="421" width="252" height="44"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="size" keyPath="starSize">
                                                 <size key="value" width="44" height="44"/>
@@ -125,16 +125,26 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="新建项目" id="6N7-gP-xXg">
-                        <barButtonItem key="leftBarButtonItem" title="取消" id="Hht-Nb-hRO"/>
-                        <barButtonItem key="rightBarButtonItem" title="保存" id="7FK-yP-fKh"/>
+                        <barButtonItem key="leftBarButtonItem" title="取消" id="Hht-Nb-hRO">
+                            <connections>
+                                <action selector="cancel:" destination="BYZ-38-t0r" id="gAo-zy-lKr"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="保存" id="7FK-yP-fKh">
+                            <connections>
+                                <segue destination="RSq-49-HmN" kind="unwind" unwindAction="unwindToMealListWithSender:" id="x8P-wi-EGN"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="nameTextField" destination="xbP-lv-mkD" id="5Dq-lq-7WD"/>
                         <outlet property="photoImageView" destination="RZD-Oh-acO" id="Ctg-9b-Pbm"/>
                         <outlet property="ratingControl" destination="j1I-Yn-gCF" id="grO-BI-Zep"/>
+                        <outlet property="saveButton" destination="7FK-yP-fKh" id="KU5-Wd-WgI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <exit id="RSq-49-HmN" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer id="E3Q-32-vVQ">
                     <connections>
                         <action selector="selectImageFromPhotoLibrary:" destination="BYZ-38-t0r" id="xCl-PS-ytS"/>
@@ -184,6 +194,6 @@
         <image name="defaultPhoto" width="320" height="320"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hwK-as-Ec2"/>
+        <segue reference="qCj-Yi-953"/>
     </inferredMetricsTieBreakers>
 </document>

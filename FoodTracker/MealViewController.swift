@@ -25,6 +25,13 @@ class MealViewController: UIViewController, UITextFieldDelegate,
         super.viewDidLoad()
         // 通过代理回调处理文本框
         nameTextField.delegate = self
+        // 如果是编辑状态，那么把空都填上
+        if let meal = meal {
+            navigationItem.title = meal.name
+            nameTextField.text = meal.name
+            photoImageView.image = meal.photo
+            ratingControl.rating = meal.rating
+        }
         // 没有有效项目名称，禁用保存按钮
         updateSaveButtonState()
     }
@@ -59,7 +66,17 @@ class MealViewController: UIViewController, UITextFieldDelegate,
     }
     //MARK: 跳转
     @IBAction func cancel(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
+        // 根据进入场景的方式：模式化还是导航的push，执行两种不同取消策略
+        let isPresentingInAddMealMode = presentingViewController is UINavigationController
+        if isPresentingInAddMealMode{
+            dismiss(animated: true, completion: nil)
+        }
+        else if let owningNavigationController = navigationController{
+            owningNavigationController.popViewController(animated: true)
+        }
+        else{
+            fatalError("The MealViewController is not inside a navigation controller.")
+        }
     }
     // 在显示目标视图前配置视图控制器
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
