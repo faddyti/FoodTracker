@@ -15,6 +15,9 @@ class Meal:NSObject, NSCoding {
     var name: String
     var photo: UIImage?
     var rating: Int
+    //MARK:存放路径
+    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("meals")
     //MARK:类型
     struct PropertyKey {
         static let name = "name"

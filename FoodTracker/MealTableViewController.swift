@@ -21,8 +21,14 @@ class MealTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         
-        // 加载快餐列表
-        loadSampleMeals()
+        // 加载保存到本地的列表
+        if let savedMeals = loadMeals() {
+            meals += savedMeals
+        }
+        else{
+            // 加载快餐列表
+            loadSampleMeals()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,6 +74,7 @@ class MealTableViewController: UITableViewController {
         if editingStyle == .delete {
             // Delete the row from the data source
             meals.remove(at: indexPath.row)
+            saveMeals()
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -129,6 +136,7 @@ class MealTableViewController: UITableViewController {
                 meals.append(meal)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
+            saveMeals()
         }
     }
     //MARK:私有方法
@@ -146,6 +154,18 @@ class MealTableViewController: UITableViewController {
             fatalError("无法创建实例:meal3")
         }
         meals += [meal1,meal2,meal3]
+    }
+    private func saveMeals(){
+        let isSuccessSave = NSKeyedArchiver.archiveRootObject(meals, toFile: Meal.ArchiveURL.path)
+        if isSuccessSave{
+            os_log("saved", log:OSLog.default,type:.debug)
+        }
+        else{
+            os_log("save failed",log:OSLog.default,type:.error)
+        }
+    }
+    private func loadMeals()->[Meal]? {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: Meal.ArchiveURL.path) as? [Meal]
     }
 
 }
